@@ -1,6 +1,10 @@
 package config
 
 import (
+	"acp9-redy-gigih/models/cart"
+	"acp9-redy-gigih/models/category"
+	"acp9-redy-gigih/models/product"
+	"acp9-redy-gigih/models/transaction"
 	"acp9-redy-gigih/models/user"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
@@ -27,10 +31,11 @@ func InitDB() {
 	if err != nil {
 		panic(err)
 	}
+	initialMigration()
 }
 
-func InitialMigration() {
-	DB.AutoMigrate(
-		&user.User{},
-	)
+func initialMigration() {
+	var models = []interface{}{&user.User{}, &category.Category{}, &product.Product{}, &cart.Cart{},
+		&cart.CartDetail{}, &transaction.Transaction{}, &transaction.TransactionDetail{}}
+	DB.AutoMigrate(models...)
 }
