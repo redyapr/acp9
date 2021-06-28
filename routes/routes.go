@@ -2,7 +2,8 @@ package routes
 
 import (
 	"acp9-redy-gigih/controllers"
-	"github.com/labstack/echo"
+
+	"github.com/labstack/echo/v4"
 )
 
 func New() *echo.Echo {

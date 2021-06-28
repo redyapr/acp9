@@ -5,9 +5,8 @@ import (
 	"acp9-redy-gigih/routes"
 )
 
-
 func main() {
 	config.InitDB()
 	e := routes.New()
-	e.Start(":6969")
+	e.Logger.Fatal(e.Start(":6969"))
 }

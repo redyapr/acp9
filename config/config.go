@@ -36,7 +36,14 @@ func InitDB() {
 }
 
 func initialMigration() {
-	var models = []interface{}{&user.User{}, &category.Category{}, &product.Product{}, &cart.Cart{},
-		&cart.CartDetail{}, &transaction.Transaction{}, &transaction.TransactionDetail{}}
+	var models = []interface{}{
+		&user.User{},
+		&category.Category{},
+		&product.Product{},
+		&cart.Cart{},
+		&cart.CartDetail{},
+		&transaction.Transaction{},
+		&transaction.TransactionDetail{},
+	}
 	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models...)
 }
