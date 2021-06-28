@@ -13,6 +13,7 @@ func New() *echo.Echo {
 	e.POST("/register/confirm/:userOTP", controllers.ConfirmationController)
 	e.POST("/login", controllers.LoginController)
 	e.GET("/categories", controllers.GetCategoriesController)
+	e.GET("/categories/:id", controllers.GetCategoryController)
 	e.GET("/products", controllers.GetProductsController)
 	e.GET("/products/:categotySlug", controllers.GetProductsByCategoryController)
 	e.POST("/cart", controllers.AddCartController)
