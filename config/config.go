@@ -6,11 +6,12 @@ import (
 	"acp9-redy-gigih/models/product"
 	"acp9-redy-gigih/models/transaction"
 	"acp9-redy-gigih/models/user"
+	"log"
+	"os"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"log"
-	"os"
 )
 
 var DB *gorm.DB
@@ -37,5 +38,5 @@ func InitDB() {
 func initialMigration() {
 	var models = []interface{}{&user.User{}, &category.Category{}, &product.Product{}, &cart.Cart{},
 		&cart.CartDetail{}, &transaction.Transaction{}, &transaction.TransactionDetail{}}
-	DB.AutoMigrate(models...)
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models...)
 }
