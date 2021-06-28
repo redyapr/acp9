@@ -16,7 +16,7 @@ import (
 
 var DB *gorm.DB
 
-func env(key string) string {
+func Env(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -25,8 +25,8 @@ func env(key string) string {
 }
 
 func InitDB() {
-	connectionString := env("MYSQL_USER") + ":" + env("MYSQL_PASS") + "@tcp(" + env("MYSQL_HOST") + ":" + env(
-		"MYSQL_PORT") + ")/" + env("MYSQL_NAME") + "?charset=utf8&parseTime=True&loc=Local"
+	connectionString := Env("MYSQL_USER") + ":" + Env("MYSQL_PASS") + "@tcp(" + Env("MYSQL_HOST") + ":" + Env(
+		"MYSQL_PORT") + ")/" + Env("MYSQL_NAME") + "?charset=utf8&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
