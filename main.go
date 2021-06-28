@@ -1,9 +1,11 @@
 package main
 
 import (
+	"log"
 	"net/http"
-	"time"
+	"os"
 
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,84 +15,71 @@ var DB *gorm.DB
 
 type User struct {
 	gorm.Model
-	ID        uint           `gorm:"primarykey" json:"id"`
-	Name      string         `json:"name"`
-	Email     string         `json:"email"`
-	Password  string         `json:"password"`
-	Role      string         `json:"role"`
-	Status    string         `json:"status"`
-	OTP       string         `json:"otp"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt"`
+	ID       uint   `gorm:"primarykey" json:"id"`
+	Name     string `json:"name"`
+	Email    string `gorm:"UNIQUE" json:"email"`
+	Password string `json:"password"`
+	Role     string `json:"role"`
+	Status   string `json:"status"`
+	OTP      string `json:"otp"`
 }
 
 type Category struct {
 	gorm.Model
-	ID          uint           `gorm:"primarykey" json:"id"`
-	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	CreatedAt   time.Time      `json:"createdAt"`
-	UpdatedAt   time.Time      `json:"updatedAt"`
-	DeletedAt   gorm.DeletedAt `json:"deletedAt"`
+	ID          uint   `gorm:"primarykey" json:"id"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type Product struct {
 	gorm.Model
-	ID         uint           `gorm:"primarykey" json:"id"`
-	CategoryID int            `json:"categoryId"`
-	Name       string         `json:"name"`
-	Price      int            `json:"price"`
-	Stockint   int            `json:"stock"`
-	CreatedAt  time.Time      `json:"createdAt"`
-	UpdatedAt  time.Time      `json:"updatedAt"`
-	DeletedAt  gorm.DeletedAt `json:"deletedAt"`
+	ID         uint   `gorm:"primarykey" json:"id"`
+	CategoryID int    `json:"categoryId"`
+	Name       string `json:"name"`
+	Price      int    `json:"price"`
+	Stockint   int    `json:"stock"`
 }
 
 type Cart struct {
 	gorm.Model
-	ID        uint           `gorm:"primarykey" json:"id"`
-	UserId    int            `json:"userId"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt"`
+	ID     uint `gorm:"primarykey" json:"id"`
+	UserId int  `json:"userId"`
 }
 
 type CartDetail struct {
 	gorm.Model
-	ID        uint           `gorm:"primarykey" json:"id"`
-	CartId    int            `json:"cartId"`
-	ProductID int            `json:"productId"`
-	Qty       int            `json:"qty"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
-	DeletedAt gorm.DeletedAt `json:"deletedAt"`
+	ID        uint `gorm:"primarykey" json:"id"`
+	CartId    int  `json:"cartId"`
+	ProductID int  `json:"productId"`
+	Qty       int  `json:"qty"`
 }
 
 type Transaction struct {
 	gorm.Model
-	ID                uint           `gorm:"primarykey" json:"id"`
-	UserID            int            `json:"userId"`
-	TransactionStatus string         `json:"status"`
-	CreatedAt         time.Time      `json:"createdAt"`
-	UpdatedAt         time.Time      `json:"updatedAt"`
-	DeletedAt         gorm.DeletedAt `json:"deletedAt"`
+	ID                uint   `gorm:"primarykey" json:"id"`
+	UserID            int    `json:"userId"`
+	TransactionStatus string `json:"status"`
 }
 
 type TransactionDetail struct {
 	gorm.Model
-	ID            uint           `gorm:"primarykey" json:"id"`
-	TransactionID int            `json:"transactionId"`
-	ProductID     int            `json:"productId"`
-	DetailQTY     int            `json:"qty"`
-	DetailPrice   int            `json:"price"`
-	CreatedAt     time.Time      `json:"createdAt"`
-	UpdatedAt     time.Time      `json:"updatedAt"`
-	DeletedAt     gorm.DeletedAt `json:"deletedAt"`
+	ID            uint `gorm:"primarykey" json:"id"`
+	TransactionID int  `json:"transactionId"`
+	ProductID     int  `json:"productId"`
+	DetailQTY     int  `json:"qty"`
+	DetailPrice   int  `json:"price"`
+}
+
+func env(key string) string {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	return os.Getenv(key)
 }
 
 func InitDB() {
-	connectionString := "u1116242_acp:u1116242_acp@tcp(5.181.216.124:3306)/u1116242_acp?charset=utf8&parseTime=True&loc=Local"
+	connectionString := env("MYSQL_USER") + ":" + env("MYSQL_PASS") + "@tcp(" + env("MYSQL_HOST") + ":" + env("MYSQL_PORT") + ")/" + env("MYSQL_NAME") + "?charset=utf8&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
@@ -99,13 +88,15 @@ func InitDB() {
 }
 
 func InitialMigration() {
-	DB.AutoMigrate(&User{})
-	DB.AutoMigrate(&Category{})
-	DB.AutoMigrate(&Product{})
-	DB.AutoMigrate(&Cart{})
-	DB.AutoMigrate(&CartDetail{})
-	DB.AutoMigrate(&Transaction{})
-	DB.AutoMigrate(&TransactionDetail{})
+	DB.AutoMigrate(
+		&User{},
+		&Category{},
+		&Product{},
+		&Cart{},
+		&CartDetail{},
+		&Transaction{},
+		&TransactionDetail{},
+	)
 }
 
 func init() {
