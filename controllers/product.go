@@ -2,10 +2,10 @@ package controllers
 
 import (
 	"acp9-redy-gigih/config"
+	"acp9-redy-gigih/models/category"
 	"acp9-redy-gigih/models/product"
-	"net/http"
-
 	"github.com/labstack/echo/v4"
+	"net/http"
 )
 
 func GetProductsController(c echo.Context) error {
@@ -23,5 +23,29 @@ func GetProductsController(c echo.Context) error {
 }
 
 func GetProductsByCategoryController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Products by Category")
+	categorySlug := c.Param("categorySlug")
+
+	prod := []product.Product{}
+	category := category.Category{}
+	c.Bind(&prod)
+	err := config.DB.Debug().Model(category).Where("slug = ?", categorySlug).Find(&category).Error
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, product.ProductResponse{
+			false, "categorySlug not found", nil,
+		})
+	}
+
+	err = config.DB.Debug().Model(prod).Where("category_id = ?", category.ID).Find(&prod).Error
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, product.ProductResponse{
+			false, "products not found", nil,
+		})
+	}
+
+	//return c.JSON(http.StatusOK, map[string]interface{}{
+	//	"catSlug": category.ID,
+	//})
+	return c.JSON(http.StatusOK, product.ProductResponse{
+		true, "Success", prod,
+	})
 }
