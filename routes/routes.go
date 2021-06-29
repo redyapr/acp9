@@ -18,7 +18,7 @@ func New() *echo.Echo {
 	// eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
 	e.GET("/categories", controllers.GetCategoriesController)
 	e.GET("/products", controllers.GetProductsController)
-	e.GET("/products/:categotySlug", controllers.GetProductsByCategoryController)
+	e.GET("/products/:categorySlug", controllers.GetProductsByCategoryController)
 	e.POST("/cart", controllers.AddCartController)
 	e.GET("/cart", controllers.GetCartController)
 	e.PUT("/cart", controllers.UpdateCartController)
