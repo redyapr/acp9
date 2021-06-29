@@ -18,4 +18,4 @@
 vendor/
 
 # Other files
-.env
+# .env
