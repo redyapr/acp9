@@ -6,10 +6,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func GetProductsController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Products")
+func GetProductsController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Products")
 }
 
-func GetProductsByCategoryController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Products by Category")
+func GetProductsByCategoryController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Products by Category")
 }
