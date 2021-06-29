@@ -13,6 +13,9 @@ func New() *echo.Echo {
 	e.POST("/register", controllers.RegisterController)
 	e.POST("/register/confirm/:userOTP", controllers.ConfirmationController)
 	e.POST("/login", controllers.LoginController)
+
+	// eJwt := e
+	// eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
 	e.GET("/categories", controllers.GetCategoriesController)
 	e.GET("/products", controllers.GetProductsController)
 	e.GET("/products/:categotySlug", controllers.GetProductsByCategoryController)
