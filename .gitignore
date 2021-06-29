@@ -19,3 +19,4 @@ vendor/
 
 # Other files
 .env
+.DS_Store
