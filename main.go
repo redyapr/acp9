@@ -10,5 +10,9 @@ func main() {
 	config.InitDB()
 	e := routes.New()
 	middlewares.LogMiddleware(e)
-	e.Logger.Fatal(e.Start(":6969"))
+	port := config.Env("APP_PORT")
+	if port == "" {
+		e.Logger.Fatal("APP_PORT must be set")
+	}
+	e.Logger.Fatal(e.Start(":" + port))
 }

@@ -42,9 +42,6 @@ func GetProductsByCategoryController(c echo.Context) error {
 		})
 	}
 
-	//return c.JSON(http.StatusOK, map[string]interface{}{
-	//	"catSlug": category.ID,
-	//})
 	return c.JSON(http.StatusOK, product.ProductResponse{
 		true, "Success", prod,
 	})
