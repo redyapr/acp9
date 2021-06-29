@@ -1,22 +1,19 @@
 package controllers
 
 import (
-	"github.com/labstack/echo"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
-func IndexController(c echo.Context) error {
-	return c.String(http.StatusOK, "Welcome to ACP9 Redy Gigih")
+func RegisterController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Register")
 }
 
-func RegisterController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Register")
+func ConfirmationController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Register Confirmation")
 }
 
-func ConfirmationController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Register Confirmation")
-}
-
-func LoginController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Login")
+func LoginController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Login")
 }

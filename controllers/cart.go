@@ -1,22 +1,23 @@
 package controllers
 
 import (
-	"github.com/labstack/echo"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
-func AddCartController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Add to Cart")
+func AddCartController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Add to Cart")
 }
 
-func GetCartController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Get Cart")
+func GetCartController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Get Cart")
 }
 
-func UpdateCartController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Update Cart")
+func UpdateCartController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Update Cart")
 }
 
-func DeleteCartController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Delete Cart")
+func DeleteCartController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Delete Cart")
 }

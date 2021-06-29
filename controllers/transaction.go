@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"github.com/labstack/echo"
 	"net/http"
+
+	"github.com/labstack/echo/v4"
 )
 
-func CheckoutController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Checkout")
+func CheckoutController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Checkout")
 }
 
-func PaymentController(c echo.Context) error {
-	return c.JSON(http.StatusOK, "[WIP] Payment")
+func PaymentController(e echo.Context) error {
+	return e.JSON(http.StatusOK, "[WIP] Payment")
 }
