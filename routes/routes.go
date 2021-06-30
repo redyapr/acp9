@@ -9,22 +9,21 @@ import (
 func New() *echo.Echo {
 	e := echo.New()
 
-	e.GET("/", controllers.IndexController)
 	e.POST("/register", controllers.RegisterController)
 	e.POST("/register/confirm/:userOTP", controllers.ConfirmationController)
 	e.POST("/login", controllers.LoginController)
 
-	// eJwt := e
+	// eJwt := e.Group("/")
 	// eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
-	e.GET("/categories", controllers.GetCategoriesController)
-	e.GET("/products", controllers.GetProductsController)
-	e.GET("/products/:categorySlug", controllers.GetProductsByCategoryController)
-	e.POST("/cart", controllers.AddCartController)
-	e.GET("/cart", controllers.GetCartController)
-	e.PUT("/cart", controllers.UpdateCartController)
-	e.DELETE("/cart/:cartId", controllers.DeleteCartController)
-	e.POST("/checkout", controllers.CheckoutController)
-	e.POST("/payment", controllers.PaymentController)
+	e.GET("categories", controllers.GetCategoriesController)
+	e.GET("products", controllers.GetProductsController)
+	e.GET("products/:categorySlug", controllers.GetProductsByCategoryController)
+	e.POST("cart", controllers.AddCartController)
+	e.GET("cart", controllers.GetCartController)
+	e.PUT("cart", controllers.UpdateCartController)
+	e.DELETE("cart/:cartId", controllers.DeleteCartController)
+	e.POST("checkout", controllers.CheckoutController)
+	e.POST("payment", controllers.PaymentController)
 
 	return e
 }

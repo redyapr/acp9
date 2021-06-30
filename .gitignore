@@ -8,7 +8,7 @@
 # Test binary, built with `go test -c`
 *.test
 
-#IDE
+# IDE
 .idea
 
 # Output of the go coverage tool, specifically when used with LiteIDE
@@ -19,3 +19,4 @@ vendor/
 
 # Other files
 .env
+.DS_Store
