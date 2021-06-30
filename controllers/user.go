@@ -32,6 +32,11 @@ func ourCompare(hashed string, plain []byte) bool {
 func RegisterController(e echo.Context) error {
 	input := user.User{}
 	e.Bind(&input)
+	if input.Name == "" || input.Email == "" || input.Password == "" {
+		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+			false, "Name/Email/Password cannot empty", nil,
+		})
+	}
 	userDB := user.User{}
 	userDB.Name = input.Name
 	userDB.Email = input.Email
