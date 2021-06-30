@@ -20,7 +20,6 @@ func ourEncrypt(plain string) string {
 }
 
 func ourCompare(hashed string, plain []byte) bool {
-	// Since we'll be getting the hashed password from the DB it will be a string so we'll need to convert it to a byte slice
 	byteHash := []byte(hashed)
 	err := bcrypt.CompareHashAndPassword(byteHash, plain)
 	if err != nil {
