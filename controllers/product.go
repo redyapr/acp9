@@ -4,6 +4,7 @@ import (
 	"acp9-redy-gigih/config"
 	"acp9-redy-gigih/models/category"
 	"acp9-redy-gigih/models/product"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -11,8 +12,10 @@ import (
 func GetProductsController(c echo.Context) error {
 	var products []product.Product
 
-	err := config.DB.Debug().Model(&product.Product{}).Find(&products).Error
+	//err := config.DB.Debug().Model(&product.Product{}).Find(&products).Error
+	err := config.DB.Debug().Preload("Category").Find(&products).Error
 	if err != nil {
+		fmt.Println(err)
 		return c.JSON(http.StatusInternalServerError, product.ProductResponse{
 			false,"Failed get database product", nil,
 		})
@@ -35,7 +38,7 @@ func GetProductsByCategoryController(c echo.Context) error {
 		})
 	}
 
-	err = config.DB.Debug().Model(prod).Where("category_id = ?", category.ID).Find(&prod).Error
+	err = config.DB.Debug().Preload("Category").Where("category_id = ?", category.ID).Find(&prod).Error
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, product.ProductResponse{
 			false, "products not found", nil,
