@@ -2,23 +2,24 @@ package controllers
 
 import (
 	"acp9-redy-gigih/config"
-	"acp9-redy-gigih/models/user"
+	"acp9-redy-gigih/models"
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 var (
-	mockDB = user.User{
-		Name:      "Gigih",
-		Email:     "francinogigih@gmail.com",
-		Password:  "123",
+	mockDB = models.User{
+		Name:     "Gigih",
+		Email:    "francinogigih@gmail.com",
+		Password: "123",
 	}
 	mockDBLoginSuccess = user.User{
 		Email:     "francinogigih@gmail.com",
@@ -28,14 +29,14 @@ var (
 		Email:     "francino@gmail.com",
 		Password:  "123",
 	}
-	mockDBLoginWrongPassword = user.User{
-		Email:     "francinogigih@gmail.com",
-		Password:  "12345",
+	mockDBLoginWrongPassword = models.User{
+		Email:    "francinogigih@gmail.com",
+		Password: "12345",
 	}
 )
 
 func AddUserData() bool {
-	userData := user.User{Name: "Gigih", Email: "francinogigih@gmail.com", Password:  "$2b$10$q1uk7lDvHd1M7BztlgrU9.t3dg32I/11Yv3uDK0Kcycp4v3BTabi6"}
+	userData := models.User{Name: "Gigih", Email: "francinogigih@gmail.com", Password: "$2b$10$q1uk7lDvHd1M7BztlgrU9.t3dg32I/11Yv3uDK0Kcycp4v3BTabi6"}
 	err := config.DB.Debug().Create(&userData)
 	if err != nil {
 		return false
@@ -46,8 +47,8 @@ func AddUserData() bool {
 func TestRegisterControllerSuccess(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
-	config.DB.Migrator().AutoMigrate(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
 	body, _ := json.Marshal(mockDB)
 	r := ioutil.NopCloser(bytes.NewReader(body))
 	req := httptest.NewRequest(http.MethodGet, "/", r)
@@ -58,7 +59,7 @@ func TestRegisterControllerSuccess(t *testing.T) {
 	if assert.NoError(t, RegisterController(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
@@ -70,8 +71,8 @@ func TestRegisterControllerSuccess(t *testing.T) {
 func TestRegisterControllerFailEmptyBody(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
-	config.DB.Migrator().AutoMigrate(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -80,7 +81,7 @@ func TestRegisterControllerFailEmptyBody(t *testing.T) {
 	if assert.NoError(t, RegisterController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
@@ -92,7 +93,7 @@ func TestRegisterControllerFailEmptyBody(t *testing.T) {
 func TestRegisterControllerFailNoTable(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
 	body, _ := json.Marshal(mockDB)
 	r := ioutil.NopCloser(bytes.NewReader(body))
 	req := httptest.NewRequest(http.MethodGet, "/", r)
@@ -103,7 +104,7 @@ func TestRegisterControllerFailNoTable(t *testing.T) {
 	if assert.NoError(t, RegisterController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
@@ -188,8 +189,8 @@ func TestLoginControllerFailWrongEmail(t *testing.T) {
 func TestLoginControllerFailWrongPassword(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
-	config.DB.Migrator().AutoMigrate(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
 	AddUserData()
 	body, _ := json.Marshal(&mockDBLoginWrongPassword)
 	r := ioutil.NopCloser(bytes.NewReader(body))
@@ -201,7 +202,7 @@ func TestLoginControllerFailWrongPassword(t *testing.T) {
 	if assert.NoError(t, LoginController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 

@@ -1,29 +1,27 @@
 package routes
 
 import (
+	"acp9-redy-gigih/config"
 	"acp9-redy-gigih/controllers"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func New() *echo.Echo {
 	e := echo.New()
-
 	e.POST("/register", controllers.RegisterController)
-	e.POST("/register/confirm/:userOTP", controllers.ConfirmationController)
 	e.POST("/login", controllers.LoginController)
-
-	// eJwt := e.Group("/")
-	// eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
-	e.GET("categories", controllers.GetCategoriesController)
-	e.GET("products", controllers.GetProductsController)
-	e.GET("products/:categorySlug", controllers.GetProductsByCategoryController)
-	e.POST("cart", controllers.AddCartController)
-	e.GET("cart", controllers.GetCartController)
-	e.PUT("cart", controllers.UpdateCartController)
-	e.DELETE("cart/:cartId", controllers.DeleteCartController)
-	e.POST("checkout", controllers.CheckoutController)
-	e.POST("payment", controllers.PaymentController)
-
+	eJwt := e.Group("/")
+	eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
+	eJwt.GET("categories", controllers.GetCategoriesController)
+	eJwt.GET("products", controllers.GetProductsController)
+	eJwt.GET("products/:categorySlug", controllers.GetProductsByCategoryController)
+	eJwt.POST("cart", controllers.AddCartController)
+	eJwt.GET("cart", controllers.GetCartController)
+	eJwt.PUT("cart/:productId", controllers.UpdateCartController)
+	eJwt.DELETE("cart/:productId", controllers.DeleteCartController)
+	eJwt.GET("checkout", controllers.CheckoutController)
+	eJwt.POST("payment", controllers.PaymentController)
 	return e
 }

@@ -1,8 +1,9 @@
-package category
+package models
 
 import (
-	"gorm.io/gorm"
 	"time"
+
+	"gorm.io/gorm"
 )
 
 type Category struct {
@@ -13,4 +14,10 @@ type Category struct {
 	CreatedAt   time.Time      `json:"created_at"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+}
+
+type CategoryResponse struct {
+	Status  bool       `json:"status"`
+	Message string     `json:"message"`
+	Data    []Category `json:"data"`
 }

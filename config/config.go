@@ -1,11 +1,8 @@
 package config
 
 import (
-	"acp9-redy-gigih/models/cart"
-	"acp9-redy-gigih/models/category"
-	"acp9-redy-gigih/models/product"
-	"acp9-redy-gigih/models/transaction"
-	"acp9-redy-gigih/models/user"
+	"acp9-redy-gigih/models"
+	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -18,8 +15,10 @@ var DB *gorm.DB
 func Env(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
-		//log.Fatal("Error loading .env file")
-		return "123DY_6161H"
+		err := godotenv.Load("../.env")
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
 	}
 	return os.Getenv(key)
 }
@@ -36,16 +35,16 @@ func InitDB() {
 }
 
 func initialMigration() {
-	var models = []interface{}{
-		&user.User{},
-		&category.Category{},
-		&product.Product{},
-		&cart.Cart{},
-		&cart.CartDetail{},
-		&transaction.Transaction{},
-		&transaction.TransactionDetail{},
-	}
-	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models...)
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
+		[]interface{}{
+			&models.User{},
+			&models.Category{},
+			&models.Product{},
+			&models.Cart{},
+			&models.Transaction{},
+			&models.TransactionDetail{},
+		}...,
+	)
 }
 
 func InitDBTest() {
