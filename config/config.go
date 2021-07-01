@@ -6,7 +6,6 @@ import (
 	"acp9-redy-gigih/models/product"
 	"acp9-redy-gigih/models/transaction"
 	"acp9-redy-gigih/models/user"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -19,7 +18,33 @@ var DB *gorm.DB
 func Env(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		// log.Fatal("Error loading .env file")
+		var val string
+		switch key {
+		case "APP_PORT":
+			val = "6969"
+		case "MYSQL_HOST":
+			val = "5.181.216.124"
+		case "MYSQL_PORT":
+			val = "3306"
+		case "MYSQL_USER":
+			val = "u1116242_acp"
+		case "MYSQL_PASS":
+			val = "u1116242_acp"
+		case "MYSQL_NAME":
+			val = "u1116242_acp"
+		case "MONGO_HOST":
+			val = "gcpsingapore.wbzy1.gcp.mongodb.net"
+		case "MONGO_USER":
+			val = "acp"
+		case "MONGO_PASS":
+			val = "acp"
+		case "MONGO_NAME":
+			val = "acp"
+		case "JWT_SECRET":
+			val = "123DY_6161H"
+		}
+		return val
 	}
 	return os.Getenv(key)
 }
