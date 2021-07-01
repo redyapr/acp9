@@ -10,7 +10,6 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/labstack/echo/v4"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -56,10 +55,4 @@ func InitDBTest() {
 	if err != nil {
 		panic(err.Error())
 	}
-}
-
-func SetupEchoDB() *echo.Echo {
-	InitDBTest()
-	e := echo.New()
-	return e
 }
