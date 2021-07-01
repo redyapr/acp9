@@ -3,7 +3,7 @@ package controllers
 import (
 	"acp9-redy-gigih/config"
 	"acp9-redy-gigih/middlewares"
-	"acp9-redy-gigih/models/user"
+	"acp9-redy-gigih/models"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -26,47 +26,47 @@ func ourCompare(hashed string, plain []byte) bool {
 }
 
 func RegisterController(e echo.Context) error {
-	input := user.User{}
+	input := models.User{}
 	e.Bind(&input)
 	if input.Name == "" || input.Email == "" || input.Password == "" {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Name/Email/Password cannot empty", nil,
 		})
 	}
-	userDB := user.User{}
+	userDB := models.User{}
 	userDB.Name = input.Name
 	userDB.Email = input.Email
 	userDB.Password = ourEncrypt(input.Password)
 	err := config.DB.Create(&userDB).Error
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Registration failed", nil,
 		})
 	}
-	return e.JSON(http.StatusOK, user.UserResponseSingle{
+	return e.JSON(http.StatusOK, models.UserResponseSingle{
 		true, "Registration success", userDB,
 	})
 }
 
 func LoginController(e echo.Context) error {
-	input := user.User{}
+	input := models.User{}
 	e.Bind(&input)
-	userDB := user.User{}
-	userResponse := user.UserLogin{}
+	userDB := models.User{}
+	userResponse := models.UserLogin{}
 	err := config.DB.Debug().Model(userDB).Where("email = ?", input.Email).Find(&userDB).Error
 	if err != nil {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Database error", nil,
 		})
 	}
 	count := config.DB.Debug().Model(userDB).Where("email = ?", input.Email).Find(&userDB).RowsAffected
 	if count < 1 {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Wrong email", nil,
 		})
 	}
 	if !ourCompare(userDB.Password, []byte(input.Password)) {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
+		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Wrong password", nil,
 		})
 	}
@@ -76,7 +76,7 @@ func LoginController(e echo.Context) error {
 	userResponse.Email = userDB.Email
 	userResponse.Role = userDB.Role
 	userResponse.Status = userDB.Status
-	return e.JSON(http.StatusOK, user.UserResponseLogin{
+	return e.JSON(http.StatusOK, models.UserResponseLogin{
 		true, "Login success", userResponse,
 	})
 }

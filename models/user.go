@@ -1,4 +1,4 @@
-package user
+package models
 
 import (
 	"time"
@@ -26,4 +26,22 @@ type UserLogin struct {
 	Role   string `gorm:"type:enum('Admin','Customer');default:Customer" json:"role"`
 	Status string `gorm:"type:enum('Pending','Active','Suspended');default:Active" json:"status"`
 	Token  string `json:"token"`
+}
+
+type UserResponse struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    []User `json:"data"`
+}
+
+type UserResponseSingle struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    User   `json:"data"`
+}
+
+type UserResponseLogin struct {
+	Status  bool      `json:"status"`
+	Message string    `json:"message"`
+	Data    UserLogin `json:"data"`
 }

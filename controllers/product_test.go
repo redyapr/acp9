@@ -2,19 +2,19 @@ package controllers
 
 import (
 	"acp9-redy-gigih/config"
-	"acp9-redy-gigih/models/category"
-	"acp9-redy-gigih/models/product"
+	"acp9-redy-gigih/models"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 func AddProductData() bool {
-	prod := product.Product{Name: "Belajar Pemrograman Golang", Price:115000, Stockint: 10, CategoryID: 1}
+	prod := models.Product{Name: "Belajar Pemrograman Golang", Price: 115000, Stockint: 10, CategoryID: 1}
 	err := config.DB.Create(&prod)
 	if err != nil {
 		return false
@@ -24,11 +24,11 @@ func AddProductData() bool {
 func TestGetProductsController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&category.Category{})
-	config.DB.Migrator().AutoMigrate(&category.Category{})
+	config.DB.Migrator().DropTable(&models.Category{})
+	config.DB.Migrator().AutoMigrate(&models.Category{})
 	AddCategoryData()
-	config.DB.Migrator().DropTable(&product.Product{})
-	config.DB.Migrator().AutoMigrate(&product.Product{})
+	config.DB.Migrator().DropTable(&models.Product{})
+	config.DB.Migrator().AutoMigrate(&models.Product{})
 	AddProductData()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -39,7 +39,7 @@ func TestGetProductsController(t *testing.T) {
 	if assert.NoError(t, GetProductsController(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		body := rec.Body.String()
-		var responseProducts product.ProductResponse
+		var responseProducts models.ProductResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseProducts)
 
@@ -52,7 +52,7 @@ func TestGetProductsController(t *testing.T) {
 func TestFailGetProductsController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&product.Product{})
+	config.DB.Migrator().DropTable(&models.Product{})
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -62,7 +62,7 @@ func TestFailGetProductsController(t *testing.T) {
 	if assert.NoError(t, GetProductsController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseProducts product.ProductResponse
+		var responseProducts models.ProductResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseProducts)
 
@@ -75,11 +75,11 @@ func TestGetProductsByCategoryController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	//models := []interface{}{&product.Product{}, &category.Category{}}
-	config.DB.Migrator().DropTable(&category.Category{})
-	config.DB.Migrator().AutoMigrate(&category.Category{})
+	config.DB.Migrator().DropTable(&models.Category{})
+	config.DB.Migrator().AutoMigrate(&models.Category{})
 	AddCategoryData()
-	config.DB.Migrator().DropTable(&product.Product{})
-	config.DB.Migrator().AutoMigrate(&product.Product{})
+	config.DB.Migrator().DropTable(&models.Product{})
+	config.DB.Migrator().AutoMigrate(&models.Product{})
 	AddProductData()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -92,7 +92,7 @@ func TestGetProductsByCategoryController(t *testing.T) {
 	if assert.NoError(t, GetProductsByCategoryController(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		body := rec.Body.String()
-		var responseProducts product.ProductResponse
+		var responseProducts models.ProductResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseProducts)
 
@@ -106,8 +106,8 @@ func TestFailGetCategoryProductsByCategoryController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	//models := []interface{}{&product.Product{}, &category.Category{}}
-	config.DB.Migrator().DropTable(&category.Category{})
-	config.DB.Migrator().DropTable(product.Product{})
+	config.DB.Migrator().DropTable(&models.Category{})
+	config.DB.Migrator().DropTable(models.Product{})
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -119,7 +119,7 @@ func TestFailGetCategoryProductsByCategoryController(t *testing.T) {
 	if assert.NoError(t, GetProductsByCategoryController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseProducts product.ProductResponse
+		var responseProducts models.ProductResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseProducts)
 
@@ -132,10 +132,10 @@ func TestFailGetProductsByCategoryController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	//models := []interface{}{&product.Product{}, &category.Category{}}
-	config.DB.Migrator().DropTable(&category.Category{})
-	config.DB.Migrator().AutoMigrate(&category.Category{})
+	config.DB.Migrator().DropTable(&models.Category{})
+	config.DB.Migrator().AutoMigrate(&models.Category{})
 	AddCategoryData()
-	config.DB.Migrator().DropTable(product.Product{})
+	config.DB.Migrator().DropTable(models.Product{})
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -147,7 +147,7 @@ func TestFailGetProductsByCategoryController(t *testing.T) {
 	if assert.NoError(t, GetProductsByCategoryController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseProducts product.ProductResponse
+		var responseProducts models.ProductResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseProducts)
 
