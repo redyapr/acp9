@@ -5,21 +5,16 @@ import (
 	"acp9-redy-gigih/models/category"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
-func setupEchoDB() *echo.Echo {
-	config.InitDBTest()
-	e := echo.New()
-	return e
-}
-
 func TestGetCategoriesController(t *testing.T) {
-	e := setupEchoDB()
+	e := config.SetupEchoDB()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
