@@ -47,3 +47,12 @@ func initialMigration() {
 	}
 	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(models...)
 }
+
+func InitDBTest() {
+	connectionString := "u1116242_acp:u1116242_acp@tcp(5.181.216.124:3306)/u1116242_acp?charset=utf8&parseTime=True&loc=Local"
+	var err error
+	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
+	if err != nil {
+		panic(err.Error())
+	}
+}
