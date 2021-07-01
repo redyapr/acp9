@@ -2,18 +2,19 @@ package controllers
 
 import (
 	"acp9-redy-gigih/config"
-	"acp9-redy-gigih/models/category"
+	"acp9-redy-gigih/models"
 	"encoding/json"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/labstack/echo/v4"
+	"github.com/stretchr/testify/assert"
 )
 
 func AddCategoryData() bool {
-	cat := category.Category{Name: "Buku", Description: "Best books on market.", Slug: "buku"}
+	cat := models.Category{Name: "Buku", Description: "Best books on market.", Slug: "buku"}
 	err := config.DB.Create(&cat)
 	if err != nil {
 		return false
@@ -24,8 +25,8 @@ func AddCategoryData() bool {
 func TestGetCategoriesController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&category.Category{})
-	config.DB.Migrator().AutoMigrate(&category.Category{})
+	config.DB.Migrator().DropTable(&models.Category{})
+	config.DB.Migrator().AutoMigrate(&models.Category{})
 	AddCategoryData()
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -36,7 +37,7 @@ func TestGetCategoriesController(t *testing.T) {
 	if assert.NoError(t, GetCategoriesController(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		body := rec.Body.String()
-		var responseCategory category.CategoryResponse
+		var responseCategory models.CategoryResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseCategory)
 
@@ -49,7 +50,7 @@ func TestGetCategoriesController(t *testing.T) {
 func TestFailGetCategoriesController(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&category.Category{})
+	config.DB.Migrator().DropTable(&models.Category{})
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
@@ -59,7 +60,7 @@ func TestFailGetCategoriesController(t *testing.T) {
 	if assert.NoError(t, GetCategoriesController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseCategory category.CategoryResponse
+		var responseCategory models.CategoryResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseCategory)
 
