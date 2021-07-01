@@ -30,14 +30,14 @@ func GetProductsByCategoryController(c echo.Context) error {
 	c.Bind(&prod)
 	err := config.DB.Debug().Model(category).Where("slug = ?", categorySlug).Find(&category).Error
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, product.ProductResponse{
+		return c.JSON(http.StatusInternalServerError, product.ProductResponse{
 			false, "categorySlug not found", nil,
 		})
 	}
 
 	err = config.DB.Debug().Preload("Category").Where("category_id = ?", category.ID).Find(&prod).Error
 	if err != nil {
-		return c.JSON(http.StatusUnprocessableEntity, product.ProductResponse{
+		return c.JSON(http.StatusInternalServerError, product.ProductResponse{
 			false, "products not found", nil,
 		})
 	}
