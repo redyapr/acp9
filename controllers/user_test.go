@@ -108,6 +108,53 @@ func TestRegisterControllerFailNoTable(t *testing.T) {
 	}
 }
 
+func TestLoginControllerFailNoTable(t *testing.T) {
+	config.InitDBTest()
+	e := echo.New()
+	config.DB.Migrator().DropTable(&user.User{})
+	body, _ := json.Marshal(&mockDBLoginWrongEmail)
+	r := ioutil.NopCloser(bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodGet, "/", r)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/login")
+	if assert.NoError(t, LoginController(c)) {
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+		body := rec.Body.String()
+		var responseUser user.UserResponse
+		fmt.Println(body)
+		json.Unmarshal([]byte(body), &responseUser)
+
+		assert.Equal(t, false, responseUser.Status)
+		assert.Equal(t, "Database error", responseUser.Message)
+	}
+}
+
+func TestLoginControllerFailWrongEmail(t *testing.T) {
+	config.InitDBTest()
+	e := echo.New()
+	config.DB.Migrator().DropTable(&user.User{})
+	config.DB.Migrator().AutoMigrate(&user.User{})
+	AddUserData()
+	body, _ := json.Marshal(&mockDBLoginWrongEmail)
+	r := ioutil.NopCloser(bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodGet, "/", r)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/login")
+	if assert.NoError(t, LoginController(c)) {
+		assert.Equal(t, http.StatusInternalServerError, rec.Code)
+		body := rec.Body.String()
+		var responseUser user.UserResponse
+		fmt.Println(body)
+		json.Unmarshal([]byte(body), &responseUser)
+
+		assert.Equal(t, false, responseUser.Status)
+		assert.Equal(t, "Wrong email", responseUser.Message)
+	}
+}
 
 func TestLoginControllerFailWrongPassword(t *testing.T) {
 	config.InitDBTest()
