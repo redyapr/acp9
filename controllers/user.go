@@ -12,10 +12,7 @@ import (
 
 func ourEncrypt(plain string) string {
 	bytePlain := []byte(plain)
-	hashed, err := bcrypt.GenerateFromPassword(bytePlain, bcrypt.MinCost)
-	if err != nil {
-		panic(err.Error())
-	}
+	hashed, _ := bcrypt.GenerateFromPassword(bytePlain, bcrypt.MinCost)
 	return string(hashed)
 }
 
@@ -51,10 +48,6 @@ func RegisterController(e echo.Context) error {
 	})
 }
 
-func ConfirmationController(e echo.Context) error {
-	return e.JSON(http.StatusOK, "[WIP] Register Confirmation")
-}
-
 func LoginController(e echo.Context) error {
 	input := user.User{}
 	e.Bind(&input)
@@ -77,12 +70,7 @@ func LoginController(e echo.Context) error {
 			false, "Wrong password", nil,
 		})
 	}
-	userResponse.Token, err = middlewares.GenerateToken(int(userDB.ID))
-	if err != nil {
-		return e.JSON(http.StatusInternalServerError, user.UserResponse{
-			false, "Generata token failed", nil,
-		})
-	}
+	userResponse.Token, _ = middlewares.GenerateToken(int(userDB.ID))
 	userResponse.ID = userDB.ID
 	userResponse.Name = userDB.Name
 	userResponse.Email = userDB.Email

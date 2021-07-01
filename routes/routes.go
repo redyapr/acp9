@@ -12,7 +12,6 @@ func New() *echo.Echo {
 	e := echo.New()
 
 	e.POST("/register", controllers.RegisterController)
-	e.POST("/register/confirm/:userOTP", controllers.ConfirmationController)
 	e.POST("/login", controllers.LoginController)
 
 	eJwt := e.Group("/")
