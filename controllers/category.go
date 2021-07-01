@@ -10,7 +10,6 @@ import (
 
 func GetCategoriesController(e echo.Context) error {
 	var categories []category.Category
-
 	err := config.DB.Debug().Model(&category.Category{}).Find(&categories).Error
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, category.CategoryResponse{

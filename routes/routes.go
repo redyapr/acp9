@@ -10,10 +10,8 @@ import (
 
 func New() *echo.Echo {
 	e := echo.New()
-
 	e.POST("/register", controllers.RegisterController)
 	e.POST("/login", controllers.LoginController)
-
 	eJwt := e.Group("/")
 	eJwt.Use(middleware.JWT([]byte(config.Env("JWT_SECRET"))))
 	eJwt.GET("categories", controllers.GetCategoriesController)
@@ -21,10 +19,9 @@ func New() *echo.Echo {
 	eJwt.GET("products/:categorySlug", controllers.GetProductsByCategoryController)
 	eJwt.POST("cart", controllers.AddCartController)
 	eJwt.GET("cart", controllers.GetCartController)
-	eJwt.PUT("cart", controllers.UpdateCartController)
-	eJwt.DELETE("cart/:cartId", controllers.DeleteCartController)
-	eJwt.POST("checkout", controllers.CheckoutController)
+	eJwt.PUT("cart/:productId", controllers.UpdateCartController)
+	eJwt.DELETE("cart/:productId", controllers.DeleteCartController)
+	eJwt.GET("checkout", controllers.CheckoutController)
 	eJwt.POST("payment", controllers.PaymentController)
-
 	return e
 }
