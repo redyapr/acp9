@@ -16,9 +16,12 @@ type Transaction struct {
 }
 
 type TransactionDetail struct {
-	gorm.Model
-	TransactionID int `json:"transactionId"`
-	ProductID     int `json:"productId"`
-	Qty           int `json:"qty"`
-	Price         int `json:"price"`
+	ID            uint           `json:"id" gorm:"primarykey"`
+	TransactionID int            `json:"transactionId"`
+	ProductID     int            `json:"productId"`
+	Qty           int            `json:"qty"`
+	Price         int            `json:"price"`
+	CreatedAt     time.Time      `json:"created_at"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `json:"deleted_at" gorm:"index"`
 }

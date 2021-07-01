@@ -8,18 +8,23 @@ import (
 
 type Cart struct {
 	ID        uint           `json:"id" gorm:"primarykey"`
-	UserId    int            `json:"userId"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
-}
-
-type CartDetail struct {
-	ID        uint           `json:"id" gorm:"primarykey"`
-	CartId    int            `json:"cart_d"`
-	ProductID int            `json:"product_d"`
+	UserId    int            `json:"user_id"`
+	ProductID int            `json:"product_id"`
 	Qty       int            `json:"qty"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	// Product   Product        `gorm:"foreignKey:ID;reference:product_id" json:"product"`
+}
+
+type CartResponse struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    []Cart `json:"data"`
+}
+
+type CartResponseSingle struct {
+	Status  bool   `json:"status"`
+	Message string `json:"message"`
+	Data    Cart   `json:"data"`
 }
