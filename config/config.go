@@ -6,7 +6,6 @@ import (
 	"acp9-redy-gigih/models/product"
 	"acp9-redy-gigih/models/transaction"
 	"acp9-redy-gigih/models/user"
-	"log"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -19,7 +18,8 @@ var DB *gorm.DB
 func Env(key string) string {
 	err := godotenv.Load(".env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		//log.Fatal("Error loading .env file")
+		return "123DY_6161H"
 	}
 	return os.Getenv(key)
 }

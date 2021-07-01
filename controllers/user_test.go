@@ -20,6 +20,10 @@ var (
 		Email:     "francinogigih@gmail.com",
 		Password:  "123",
 	}
+	mockDBLoginSuccess = user.User{
+		Email:     "francinogigih@gmail.com",
+		Password:  "123",
+	}
 	mockDBLoginWrongEmail = user.User{
 		Email:     "francino@gmail.com",
 		Password:  "123",
@@ -105,6 +109,31 @@ func TestRegisterControllerFailNoTable(t *testing.T) {
 
 		assert.Equal(t, false, responseUser.Status)
 		assert.Equal(t, "Registration failed", responseUser.Message)
+	}
+}
+
+func TestLoginControllerSuccess(t *testing.T) {
+	config.InitDBTest()
+	e := echo.New()
+	config.DB.Migrator().DropTable(&user.User{})
+	config.DB.Migrator().AutoMigrate(&user.User{})
+	AddUserData()
+	body, _ := json.Marshal(&mockDBLoginSuccess)
+	r := ioutil.NopCloser(bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodGet, "/", r)
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/login")
+	if assert.NoError(t, LoginController(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		body := rec.Body.String()
+		var responseUser user.UserResponse
+		fmt.Println(body)
+		json.Unmarshal([]byte(body), &responseUser)
+
+		assert.Equal(t, true, responseUser.Status)
+		assert.Equal(t, "Login success", responseUser.Message)
 	}
 }
 
