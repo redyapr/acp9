@@ -54,11 +54,16 @@ func InitDBTest() {
 	}
 }
 
-func InitMongo() {
-	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017/?connect=direct")
-	client, err := mongo.Connect(context.TODO(), clientOpts)
+func InitMongo() (*mongo.Database, error) {
+	clientOptions := options.Client()
+	clientOptions.ApplyURI("mongodb+srv://" + Env("MONGO_USER") + ":" + Env("MONGO_PASS") + "@" + Env("MONGO_HOST") + "/" + Env("MONGO_NAME") + "?retryWrites=true&w=majority")
+	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	_ = client
+	err = client.Connect(context.Background())
+	if err != nil {
+		return nil, err
+	}
+	return client.Database(Env("MONGO_NAME")), nil
 }
