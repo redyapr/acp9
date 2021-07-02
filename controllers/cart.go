@@ -4,6 +4,7 @@ import (
 	"acp9-redy-gigih/config"
 	"acp9-redy-gigih/middlewares"
 	"acp9-redy-gigih/models"
+	"fmt"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -60,6 +61,7 @@ func GetCartController(e echo.Context) error {
 
 func UpdateCartController(e echo.Context) error {
 	userId := int(middlewares.ExtractToken(e))
+	fmt.Println(userId)
 	productId := e.Param("productId")
 	input := models.Cart{}
 	e.Bind(&input)
