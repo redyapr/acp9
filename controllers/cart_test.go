@@ -62,6 +62,35 @@ func TestAddCartControllerSuccess(t *testing.T) {
 	}
 }
 
+func TestAddCartControllerSuccessUpdateExists(t *testing.T) {
+	config.InitDBTest()
+	e := echo.New()
+	config.DB.Migrator().DropTable(&models.Cart{})
+	config.DB.Migrator().AutoMigrate(&models.Cart{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
+	AddUserData()
+	AddCartData()
+	token, _ := middlewares.GenerateToken(1)
+	body, _ := json.Marshal(mockDBCart)
+	r := ioutil.NopCloser(bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodGet, "/", r)
+	req.Header.Set(echo.HeaderAuthorization, fmt.Sprintf("Bearer %v", token))
+	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.SetPath("/cart")
+	if assert.NoError(t, AddCartController(c)) {
+		assert.Equal(t, http.StatusOK, rec.Code)
+		body := rec.Body.String()
+		var responseCart models.CartResponse
+		json.Unmarshal([]byte(body), &responseCart)
+
+		assert.Equal(t, true, responseCart.Status)
+		assert.Equal(t, "Add to cart success", responseCart.Message)
+	}
+}
+
 func TestAddCartControllerFailNoTable(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
