@@ -24,8 +24,7 @@ func Env(key string) string {
 }
 
 func InitDB() {
-	connectionString := Env("MYSQL_USER") + ":" + Env("MYSQL_PASS") + "@tcp(" + Env("MYSQL_HOST") + ":" + Env(
-		"MYSQL_PORT") + ")/" + Env("MYSQL_NAME") + "?charset=utf8&parseTime=True&loc=Local"
+	connectionString := Env("MYSQL_USER") + ":" + Env("MYSQL_PASS") + "@tcp(" + Env("MYSQL_HOST") + ":" + Env("MYSQL_PORT") + ")/" + Env("MYSQL_NAME") + "?charset=utf8&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
@@ -35,21 +34,16 @@ func InitDB() {
 }
 
 func initialMigration() {
-	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(
-		[]interface{}{
-			&models.User{},
-			&models.Category{},
-			&models.Product{},
-			&models.Cart{},
-			&models.Transaction{},
-			&models.TransactionDetail{},
-		}...,
-	)
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.User{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Category{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Product{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Cart{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.Transaction{})
+	DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.TransactionDetail{})
 }
 
 func InitDBTest() {
-	connectionString := Env("MYSQL_USER_TEST") + ":" + Env("MYSQL_PASS_TEST") + "@tcp(localhost:3306)/" + Env(
-		"MYSQL_NAME_TEST") + "?charset=utf8&parseTime=True&loc=Local"
+	connectionString := Env("MYSQL_USER_TEST") + ":" + Env("MYSQL_PASS_TEST") + "@tcp(" + Env("MYSQL_HOST") + ":" + Env("MYSQL_PORT") + ")/" + Env("MYSQL_NAME_TEST") + "?charset=utf8&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {

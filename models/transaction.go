@@ -13,6 +13,7 @@ type Transaction struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+	// Details   []TransactionDetail `gorm:"foreignKey:ID;reference:transaction_id" json:"details"`
 }
 
 type TransactionDetail struct {
@@ -24,4 +25,16 @@ type TransactionDetail struct {
 	CreatedAt     time.Time      `json:"created_at"`
 	UpdatedAt     time.Time      `json:"updated_at"`
 	DeletedAt     gorm.DeletedAt `json:"deleted_at" gorm:"index"`
+}
+
+type TransactionResponse struct {
+	Status  bool          `json:"status"`
+	Message string        `json:"message"`
+	Data    []Transaction `json:"data"`
+}
+
+type TransactionResponseSingle struct {
+	Status  bool        `json:"status"`
+	Message string      `json:"message"`
+	Data    Transaction `json:"data"`
 }

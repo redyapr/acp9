@@ -21,7 +21,8 @@ func New() *echo.Echo {
 	eJwt.GET("cart", controllers.GetCartController)
 	eJwt.PUT("cart/:productId", controllers.UpdateCartController)
 	eJwt.DELETE("cart/:productId", controllers.DeleteCartController)
+	eJwt.GET("transactions", controllers.GetTransactionsController)
 	eJwt.GET("checkout", controllers.CheckoutController)
-	eJwt.POST("payment", controllers.PaymentController)
+	eJwt.PUT("payment", controllers.PaymentController)
 	return e
 }
