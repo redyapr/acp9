@@ -59,12 +59,12 @@ func CheckoutController(e echo.Context) error {
 					false, "Create transaction detail failed", nil,
 				})
 			}
-			err = config.DB.Debug().Model(&models.Cart{}).Where("user_id = ?", userId).Delete(&carts).Error
-			if err != nil {
-				return e.JSON(http.StatusInternalServerError, models.TransactionResponse{
-					false, "Clear cart failed", nil,
-				})
-			}
+			_ = config.DB.Debug().Model(&models.Cart{}).Where("user_id = ?", userId).Delete(&carts).Error
+			// if err != nil {
+			// 	return e.JSON(http.StatusInternalServerError, models.TransactionResponse{
+			// 		false, "Clear cart failed", nil,
+			// 	})
+			// }
 		}
 	}
 	return e.JSON(http.StatusOK, models.TransactionResponse{
