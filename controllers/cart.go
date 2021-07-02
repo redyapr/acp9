@@ -27,18 +27,8 @@ func AddCartController(e echo.Context) error {
 	if count == 0 {
 		cartDB.Qty = input.Qty
 		_ = config.DB.Create(&cartDB).Error
-		// if err != nil {
-		// 	return e.JSON(http.StatusInternalServerError, models.CartResponse{
-		// 		false, "Add to cart failed", nil,
-		// 	})
-		// }
 	} else {
 		_ = config.DB.Debug().Model(&cartDB).Where("user_id = ? AND product_id = ?", userId, input.ProductID).Update("qty", cartDB.Qty+input.Qty).Error
-		// if err != nil {
-		// 	return e.JSON(http.StatusInternalServerError, models.CartResponse{
-		// 		false, "Update cart failed", nil,
-		// 	})
-		// }
 	}
 	return e.JSON(http.StatusOK, models.CartResponseSingle{
 		true, "Add to cart success", cartDB,
