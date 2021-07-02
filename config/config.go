@@ -48,7 +48,8 @@ func initialMigration() {
 }
 
 func InitDBTest() {
-	connectionString := "root:@tcp(localhost:3306)/acp_test?charset=utf8&parseTime=True&loc=Local"
+	connectionString := Env("MYSQL_USER_TEST") + ":" + Env("MYSQL_PASS_TEST") + "@tcp(" + Env("MYSQL_HOST") + ":" + Env(
+		"MYSQL_PORT") + ")/" + Env("MYSQL_NAME_TEST") + "?charset=utf8&parseTime=True&loc=Local"
 	var err error
 	DB, err = gorm.Open(mysql.Open(connectionString), &gorm.Config{})
 	if err != nil {
