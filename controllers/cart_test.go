@@ -82,7 +82,7 @@ func TestAddCartControllerFailNoTable(t *testing.T) {
 		json.Unmarshal([]byte(body), &responseCart)
 
 		assert.Equal(t, false, responseCart.Status)
-		assert.Equal(t, "Chack same item failed", responseCart.Message)
+		assert.Equal(t, "Check same item failed", responseCart.Message)
 	}
 }
 
