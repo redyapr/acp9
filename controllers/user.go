@@ -60,7 +60,7 @@ func LoginController(e echo.Context) error {
 		})
 	}
 	count := config.DB.Debug().Model(userDB).Where("email = ?", input.Email).Find(&userDB).RowsAffected
-	if count < 1 {
+	if count == 0 {
 		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Wrong email", nil,
 		})
