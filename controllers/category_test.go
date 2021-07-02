@@ -22,7 +22,7 @@ func AddCategoryData() bool {
 	return true
 }
 
-func TestGetCategoriesController(t *testing.T) {
+func TestGetCategoriesControllerSuccess(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	config.DB.Migrator().DropTable(&models.Category{})
@@ -41,13 +41,13 @@ func TestGetCategoriesController(t *testing.T) {
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseCategory)
 
-		assert.Equal(t, responseCategory.Status, true)
-		assert.Equal(t, len(responseCategory.Data), 1)
-		assert.Equal(t, responseCategory.Data[0].Name, "Buku")
+		assert.Equal(t, true, responseCategory.Status)
+		assert.Equal(t, 1, len(responseCategory.Data))
+		assert.Equal(t, "Buku", responseCategory.Data[0].Name)
 	}
 }
 
-func TestFailGetCategoriesController(t *testing.T) {
+func TestGetCategoriesControllerFailNoTable(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	config.DB.Migrator().DropTable(&models.Category{})
@@ -64,7 +64,7 @@ func TestFailGetCategoriesController(t *testing.T) {
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseCategory)
 
-		assert.Equal(t, responseCategory.Status, false)
-		assert.Equal(t, len(responseCategory.Data), 0)
+		assert.Equal(t, false, responseCategory.Status)
+		assert.Equal(t, 0, len(responseCategory.Data))
 	}
 }

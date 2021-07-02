@@ -16,16 +16,16 @@ import (
 )
 
 var (
-	mockDB = models.User{
+	mockDBUser = models.User{
 		Name:     "Gigih",
 		Email:    "francinogigih@gmail.com",
 		Password: "123",
 	}
-	mockDBLoginSuccess = user.User{
+	mockDBLoginSuccess = models.User{
 		Email:     "francinogigih@gmail.com",
 		Password:  "123",
 	}
-	mockDBLoginWrongEmail = user.User{
+	mockDBLoginWrongEmail = models.User{
 		Email:     "francino@gmail.com",
 		Password:  "123",
 	}
@@ -49,7 +49,7 @@ func TestRegisterControllerSuccess(t *testing.T) {
 	e := echo.New()
 	config.DB.Migrator().DropTable(&models.User{})
 	config.DB.Migrator().AutoMigrate(&models.User{})
-	body, _ := json.Marshal(mockDB)
+	body, _ := json.Marshal(mockDBUser)
 	r := ioutil.NopCloser(bytes.NewReader(body))
 	req := httptest.NewRequest(http.MethodGet, "/", r)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -94,7 +94,7 @@ func TestRegisterControllerFailNoTable(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
 	config.DB.Migrator().DropTable(&models.User{})
-	body, _ := json.Marshal(mockDB)
+	body, _ := json.Marshal(mockDBUser)
 	r := ioutil.NopCloser(bytes.NewReader(body))
 	req := httptest.NewRequest(http.MethodGet, "/", r)
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
@@ -116,8 +116,8 @@ func TestRegisterControllerFailNoTable(t *testing.T) {
 func TestLoginControllerSuccess(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
-	config.DB.Migrator().AutoMigrate(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
 	AddUserData()
 	body, _ := json.Marshal(&mockDBLoginSuccess)
 	r := ioutil.NopCloser(bytes.NewReader(body))
@@ -129,7 +129,7 @@ func TestLoginControllerSuccess(t *testing.T) {
 	if assert.NoError(t, LoginController(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
@@ -141,7 +141,7 @@ func TestLoginControllerSuccess(t *testing.T) {
 func TestLoginControllerFailNoTable(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
 	body, _ := json.Marshal(&mockDBLoginWrongEmail)
 	r := ioutil.NopCloser(bytes.NewReader(body))
 	req := httptest.NewRequest(http.MethodGet, "/", r)
@@ -152,7 +152,7 @@ func TestLoginControllerFailNoTable(t *testing.T) {
 	if assert.NoError(t, LoginController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
@@ -164,8 +164,8 @@ func TestLoginControllerFailNoTable(t *testing.T) {
 func TestLoginControllerFailWrongEmail(t *testing.T) {
 	config.InitDBTest()
 	e := echo.New()
-	config.DB.Migrator().DropTable(&user.User{})
-	config.DB.Migrator().AutoMigrate(&user.User{})
+	config.DB.Migrator().DropTable(&models.User{})
+	config.DB.Migrator().AutoMigrate(&models.User{})
 	AddUserData()
 	body, _ := json.Marshal(&mockDBLoginWrongEmail)
 	r := ioutil.NopCloser(bytes.NewReader(body))
@@ -177,7 +177,7 @@ func TestLoginControllerFailWrongEmail(t *testing.T) {
 	if assert.NoError(t, LoginController(c)) {
 		assert.Equal(t, http.StatusInternalServerError, rec.Code)
 		body := rec.Body.String()
-		var responseUser user.UserResponse
+		var responseUser models.UserResponse
 		fmt.Println(body)
 		json.Unmarshal([]byte(body), &responseUser)
 
