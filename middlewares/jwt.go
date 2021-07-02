@@ -19,10 +19,12 @@ func GenerateToken(userId int) (string, error) {
 }
 
 func ExtractToken(e echo.Context) float64 {
-	user := e.Get("user").(*jwt.Token)
-	if user.Valid {
-		claims := user.Claims.(jwt.MapClaims)
-		return claims["userId"].(float64)
+	if temp := e.Get("user"); temp != nil {
+		user := e.Get("user").(*jwt.Token)
+		if user.Valid {
+			claims := user.Claims.(jwt.MapClaims)
+			return claims["userId"].(float64)
+		}
 	}
 	return 0
 }
