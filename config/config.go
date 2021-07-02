@@ -2,10 +2,13 @@ package config
 
 import (
 	"acp9-redy-gigih/models"
+	"context"
 	"log"
 	"os"
 
 	"github.com/joho/godotenv"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -49,4 +52,13 @@ func InitDBTest() {
 	if err != nil {
 		panic(err.Error())
 	}
+}
+
+func InitMongo() {
+	clientOpts := options.Client().ApplyURI("mongodb://localhost:27017/?connect=direct")
+	client, err := mongo.Connect(context.TODO(), clientOpts)
+	if err != nil {
+		log.Fatal(err)
+	}
+	_ = client
 }
