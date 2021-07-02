@@ -19,11 +19,11 @@ func AddCartController(e echo.Context) error {
 	err := config.DB.Debug().Model(&models.Cart{}).Where("user_id = ? AND product_id = ?", userId, input.ProductID).Find(&cartDB).Error
 	if err != nil {
 		return e.JSON(http.StatusInternalServerError, models.CartResponse{
-			false, "Chack same item failed", nil,
+			false, "Check same item failed", nil,
 		})
 	}
 	count := config.DB.Debug().Model(&models.Cart{}).Where("user_id = ? AND product_id = ?", userId, input.ProductID).Find(&cartDB).RowsAffected
-	if count < 1 {
+	if count == 0 {
 		cartDB.Qty = input.Qty
 		err := config.DB.Create(&cartDB).Error
 		if err != nil {
@@ -71,7 +71,7 @@ func UpdateCartController(e echo.Context) error {
 		})
 	}
 	count := config.DB.Debug().Model(&carts).Where("user_id = ? AND product_id = ?", userId, productId).Update("qty", input.Qty).RowsAffected
-	if count < 1 {
+	if count == 0 {
 		return e.JSON(http.StatusInternalServerError, models.UserResponse{
 			false, "Nothing updated", nil,
 		})
